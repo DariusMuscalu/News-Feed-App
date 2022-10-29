@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:news_app/calendar/calendar.page.dart';
+import 'package:news_app/calendar/pages/calendar.page.dart';
 import 'package:news_app/favorites/pages/favorites.page.dart';
 import 'package:url_strategy/url_strategy.dart';
 
@@ -22,17 +22,17 @@ void main() {
   return runApp(App());
 }
 
+// TODO See if you should move this class from this file.
 class App extends StatelessWidget {
   App({Key? key}) : super(key: key);
-
-  static const String _title = 'GoRouter Example: Declarative Routes';
 
   @override
   Widget build(BuildContext context) => MaterialApp.router(
         routerConfig: _router,
-        title: _title,
       );
 
+  // TODO Move them in other separated place
+  // Routes
   final GoRouter _router = GoRouter(
     routes: <GoRoute>[
       GoRoute(

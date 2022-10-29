@@ -20,6 +20,8 @@ dependencies:
   # Used for removing the '#' from the URL.
   url_strategy: ^0.2.0
 
+  http: ^0.13.5
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
