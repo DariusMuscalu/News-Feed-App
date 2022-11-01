@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:news_app/calendar/pages/calendar.page.dart';
-import 'package:news_app/favorites/pages/favorites.page.dart';
 import 'package:news_app/router.dart';
 import 'package:url_strategy/url_strategy.dart';
-
-import 'feed/pages/feed.page.dart';
 
 // This scenario demonstrates a simple two-page app.
 //

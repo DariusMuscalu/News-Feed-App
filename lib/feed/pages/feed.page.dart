@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:news_app/feed/models/news-pack.model.dart';
+import 'package:news_app/feed/repositories/news-pack.repository.dart';
 
 // This is the main feed that is showing the latest news.
-class FeedPage extends StatelessWidget {
+class FeedPage extends StatefulWidget {
   const FeedPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  State<FeedPage> createState() => _FeedPageState();
+}
+
+class _FeedPageState extends State<FeedPage> {
+  @override
+  Widget build(BuildContext context) =>
+      Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: const Text('Feed page'),

@@ -14,4 +14,11 @@ class NewsM {
   });
 
   // TODO Add toJson and fromJson methods
+  factory NewsM.fromJson(Map<String, dynamic> json) => NewsM(
+      author: json['author'],
+      numberOfComments: json['num_comments'],
+      numberOfPoints: json['points'],
+      publishDate: json['created_at'],
+      title: json['title'],
+    );
 }
