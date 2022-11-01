@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:news_app/calendar/pages/calendar.page.dart';
 import 'package:news_app/favorites/pages/favorites.page.dart';
+import 'package:news_app/router.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 import 'feed/pages/feed.page.dart';
@@ -19,48 +20,15 @@ void main() {
   // Removes the '#' from the URL.
   setPathUrlStrategy();
 
-  return runApp(App());
+  return runApp(const App());
 }
 
 // TODO See if you should move this class from this file.
 class App extends StatelessWidget {
-  App({Key? key}) : super(key: key);
+  const App({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => MaterialApp.router(
-        routerConfig: _router,
+        routerConfig: router,
       );
-
-  // TODO Move them in other separated place
-  // Routes
-  final GoRouter _router = GoRouter(
-    routes: <GoRoute>[
-      GoRoute(
-        path: '/',
-        builder: (
-          BuildContext context,
-          GoRouterState state,
-        ) =>
-            const FeedPage(),
-        routes: <GoRoute>[
-          GoRoute(
-            path: 'favorites',
-            builder: (
-              BuildContext context,
-              GoRouterState state,
-            ) =>
-                const FavoritesPage(),
-          ),
-          GoRoute(
-            path: 'calendar',
-            builder: (
-              BuildContext context,
-              GoRouterState state,
-            ) =>
-                const CalendarPage(),
-          ),
-        ],
-      ),
-    ],
-  );
 }
