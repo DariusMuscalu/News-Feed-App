@@ -13,7 +13,6 @@ class NewsPackRepository {
       Uri.parse(url),
     );
     if (response.statusCode == 200) {
-      print('------ $response');
       return NewsPackM.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Unexpected error occurred in NewsM repository!');

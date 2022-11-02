@@ -1,3 +1,5 @@
+// I think theres no need to add toJson method at this point because we don't send anything to the server.
+// TODO Leave explanatory comment.
 class NewsM {
   final String title;
   final String publishDate;
@@ -13,7 +15,6 @@ class NewsM {
     required this.numberOfPoints,
   });
 
-  // TODO Add toJson and fromJson methods
   factory NewsM.fromJson(Map<String, dynamic> json) => NewsM(
       author: json['author'],
       numberOfComments: json['num_comments'],
