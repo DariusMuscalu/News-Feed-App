@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:news_app/feed/models/news.model.dart';
 import 'package:news_app/feed/services/news-pack.service.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../shared/images/svg.dart';
 
@@ -88,32 +89,50 @@ class _FeedPageState extends State<FeedPage> {
       );
 
   // TODO Remove the need for literals in sizes of this method.
-  Widget _newsCard({required NewsM? news}) => Container(
-        padding: const EdgeInsets.all(20),
-        margin: const EdgeInsets.all(10),
-        width: 400,
-        height: 200,
-        decoration: const BoxDecoration(
-          color: Colors.yellow,
-          borderRadius: BorderRadius.all(
-            Radius.circular(25),
+  Widget _newsCard({required NewsM? news}) => Material(
+        color: Colors.transparent,
+        child: InkWell(
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            margin: const EdgeInsets.all(10),
+            width: 400,
+            height: 200,
+            decoration: const BoxDecoration(
+              color: Colors.yellow,
+              borderRadius: BorderRadius.all(
+                Radius.circular(25),
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _title(
+                  title: news?.title ?? '',
+                ),
+                _author(
+                  author: news?.author ?? '',
+                ),
+                _numberOfComments(
+                  commentsNum: news?.numberOfComments ?? 0,
+                ),
+              ],
+            ),
           ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _title(
-              title: news?.title ?? '',
-            ),
-            _author(
-              author: news?.author ?? '',
-            ),
-            _numberOfComments(
-              commentsNum: news?.numberOfComments ?? 0,
-            ),
-          ],
+          onTap: () => _launchUrl(url: news?.url ?? ''),
         ),
       );
+
+  // TODO Extract the method in a different file. Something like utils.
+  Future<void> _launchUrl({required String url}) async {
+    final Uri uri = Uri.parse(url);
+
+    if (!await launchUrl(
+      uri,
+      mode: LaunchMode.externalApplication,
+    )) {
+      throw 'Could not launch $uri';
+    }
+  }
 
   // TODO Add style
   Widget _title({required String title}) => Text(

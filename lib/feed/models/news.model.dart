@@ -2,6 +2,7 @@
 // TODO Leave explanatory comment.
 class NewsM {
   final String title;
+  final String url;
   final String publishDate;
   final String author;
   final int numberOfComments;
@@ -9,6 +10,7 @@ class NewsM {
 
   const NewsM({
     required this.title,
+    required this.url,
     required this.publishDate,
     required this.author,
     required this.numberOfComments,
@@ -16,10 +18,11 @@ class NewsM {
   });
 
   factory NewsM.fromJson(Map<String, dynamic> json) => NewsM(
-      author: json['author'],
-      numberOfComments: json['num_comments'],
-      numberOfPoints: json['points'],
-      publishDate: json['created_at'],
-      title: json['title'],
-    );
+        title: json['title'],
+        url: json['url'],
+        publishDate: json['created_at'],
+        author: json['author'],
+        numberOfComments: json['num_comments'],
+        numberOfPoints: json['points'],
+      );
 }
