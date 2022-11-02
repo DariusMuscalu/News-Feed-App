@@ -1,15 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:news_app/feed/services/news-pack.service.dart';
 import 'package:news_app/router.dart';
+import 'package:provider/provider.dart';
 import 'package:url_strategy/url_strategy.dart';
-
-// This scenario demonstrates a simple two-page app.
-//
-// The first route '/' is mapped to Page1Screen, and the second route '/page2'
-// is mapped to Page2Screen. To navigate between pages, press the buttons on the
-// pages.
-//
-// The onPress callbacks use context.go() to navigate to another page. This is
-// equivalent to entering url to the browser url bar directly.
 
 void main() {
   // Removes the '#' from the URL.
@@ -23,7 +16,10 @@ class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => MaterialApp.router(
-        routerConfig: router,
+  Widget build(BuildContext context) => ChangeNotifierProvider(
+        create: (context) => NewsPackService(),
+        child: MaterialApp.router(
+          routerConfig: router,
+        ),
       );
 }

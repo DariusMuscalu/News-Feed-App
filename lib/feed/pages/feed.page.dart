@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:news_app/feed/models/news-pack.model.dart';
-import 'package:news_app/feed/repositories/news-pack.repository.dart';
+import 'package:news_app/feed/services/news-pack.service.dart';
+import 'package:provider/provider.dart';
 
 // This is the main feed that is showing the latest news.
 class FeedPage extends StatefulWidget {
@@ -13,26 +13,49 @@ class FeedPage extends StatefulWidget {
 
 class _FeedPageState extends State<FeedPage> {
   @override
-  Widget build(BuildContext context) =>
-      Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: const Text('Feed page'),
+  void initState() {
+    final newsPackService =
+        Provider.of<NewsPackService>(context, listen: false);
+    newsPackService.getNewsPackM();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final newsPack = Provider.of<NewsPackService>(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text('Feed page'),
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            newsPack.loading
+                ? Container(
+                    width: 200,
+                    height: 200,
+                    color: Colors.red,
+                    child: const Text('Loading Data'),
+                  )
+                : Text(newsPack.newsPack?.news[0].author ?? 'Empty'),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                ElevatedButton(
+                  onPressed: () => context.go('/favorites'),
+                  child: const Text('Go to favorites page'),
+                ),
+                ElevatedButton(
+                  onPressed: () => context.go('/calendar'),
+                  child: const Text('Go to calendar page'),
+                ),
+              ],
+            ),
+          ],
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              ElevatedButton(
-                onPressed: () => context.go('/favorites'),
-                child: const Text('Go to favorites page'),
-              ),
-              ElevatedButton(
-                onPressed: () => context.go('/calendar'),
-                child: const Text('Go to calendar page'),
-              ),
-            ],
-          ),
-        ),
-      );
+      ),
+    );
+  }
 }
