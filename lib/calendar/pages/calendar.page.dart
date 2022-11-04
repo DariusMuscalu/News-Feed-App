@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:news_app/shared/widgets/pages/page-shell.dart';
 
 // From this page we can filter the news by a specific day
 // and show news only from that day.
@@ -7,25 +8,29 @@ class CalendarPage extends StatelessWidget {
   const CalendarPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: const Text('Calendar Page'),
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              ElevatedButton(
-                onPressed: () => context.go('/'),
-                child: const Text('Go back to feed page'),
+  Widget build(BuildContext context) => PageShell(
+        appBarChild: const Text('Calendar Page'),
+        children: <Widget>[
+          Center(
+            child: Container(
+              width: 500,
+              color: Colors.amber,
+              child: CalendarDatePicker(
+                initialDate: DateTime.now(),
+                firstDate: DateTime(1900),
+                lastDate: DateTime(2100),
+                onDateChanged: (_) {},
               ),
-              ElevatedButton(
-                onPressed: () => context.go('/favorites'),
-                child: const Text('Go to favorites page'),
-              ),
-            ],
+            ),
           ),
-        ),
+          ElevatedButton(
+            onPressed: () => context.go('/'),
+            child: const Text('Go back to feed page'),
+          ),
+          ElevatedButton(
+            onPressed: () => context.go('/favorites'),
+            child: const Text('Go to favorites page'),
+          ),
+        ],
       );
 }

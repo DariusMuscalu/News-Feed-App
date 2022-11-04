@@ -19,6 +19,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) => ChangeNotifierProvider(
         create: (context) => NewsPackService(),
         child: MaterialApp.router(
+          debugShowCheckedModeBanner: false,
           routerConfig: router,
         ),
       );

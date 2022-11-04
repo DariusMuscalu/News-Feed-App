@@ -15,7 +15,7 @@ class NewsPackRepository {
     if (response.statusCode == 200) {
       return NewsPackM.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception('Unexpected error occurred in NewsM repository!');
+      throw Exception('Unexpected error occurred in NewsPack repository!');
     }
   }
 }
