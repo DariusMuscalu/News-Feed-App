@@ -2,20 +2,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:news_app/feed/models/news-pack.model.dart';
 import 'package:news_app/feed/repositories/news-pack.repository.dart';
 
-class NewsPackService extends ChangeNotifier {
-  // TODO This should be null. The server might return nothing, take that in consideration always.
-  late NewsPackM newsPack;
+import '../models/news.model.dart';
 
-  // Todo improve this with something better, a convention through all services.
-  bool loading = false;
+class NewsPackService extends ChangeNotifier {
+  // === NEWS PACK ===
+  NewsPackM? newsPack;
 
   getNewsPackM() async {
-    loading = true;
-    newsPack = (await NewsPackRepository().fetchNewsM());
-    loading = false;
+    newsPack = await NewsPackRepository().fetchNewsM();
+    // TODO Leave comment why it's used how it's used.
+    filteredNews = newsPack?.news;
 
-    // Tells the change notifier to update when changes are made and such, the UI is updated with the new data.
-    // TODO The above comment should be understood without needing a comment if you understand the provider state management API
+    notifyListeners();
+  }
+
+  // === FILTERED NEWS ===
+  List<NewsM>? filteredNews;
+
+  void updateFilteredNews({required List<NewsM> news}) {
+    filteredNews = news;
+
     notifyListeners();
   }
 }
