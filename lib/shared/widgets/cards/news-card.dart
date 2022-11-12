@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:news_app/favorites/services/favorites-news.service.dart';
-import 'package:news_app/feed/services/feed.utils.dart';
 import 'package:provider/provider.dart';
 
+import '../../../favorites-news/providers/favorites-news.provider.dart';
 import '../../../feed/models/news.model.dart';
 import '../../images/svg.dart';
+import '../../utils/feed.utils.dart';
 import '../buttons/button.dart';
 
 // The card that is responsible for displaying all the data of each news.
@@ -127,7 +127,7 @@ class _NewsCardState extends State<NewsCard> {
   Widget _addToFavoritesBtn({required String newsId}) {
     bool isFavorite = false;
 
-    return Consumer<FavoritesNewsService>(
+    return Consumer<FavoritesNewsProvider>(
       builder: (context, favoriteNewsService, child) {
         return SizedBox(
           width: 100,
@@ -142,13 +142,13 @@ class _NewsCardState extends State<NewsCard> {
             onTap: () {
               isFavorite = !isFavorite;
               if (isFavorite) {
-                Provider.of<FavoritesNewsService>(context, listen: false)
+                Provider.of<FavoritesNewsProvider>(context, listen: false)
                   ..addNewsToFavorites(
                     newsId: newsId,
                   )
                   ..addFavoritesNewsIdsToPrefs();
               } else {
-                Provider.of<FavoritesNewsService>(context, listen: false)
+                Provider.of<FavoritesNewsProvider>(context, listen: false)
                   ..removeNewsFromFavorites(
                     newsId: newsId,
                   )

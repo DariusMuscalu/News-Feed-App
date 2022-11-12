@@ -4,7 +4,7 @@ import 'package:news_app/feed/repositories/news-pack.repository.dart';
 
 import '../models/news.model.dart';
 
-class NewsPackService extends ChangeNotifier {
+class NewsPackProvider extends ChangeNotifier {
   // === NEWS PACK ===
   NewsPackM? newsPack;
 

@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:news_app/favorites/services/favorites-news.service.dart';
 import 'package:news_app/shared/const/template-dimensions.const.dart';
 import 'package:news_app/shared/widgets/cards/news-card.dart';
 import 'package:news_app/shared/widgets/pages/page-shell.dart';
 import 'package:provider/provider.dart';
 
-class FavoritesPage extends StatefulWidget {
-  const FavoritesPage({Key? key}) : super(key: key);
+import '../providers/favorites-news.provider.dart';
+
+class FavoritesNewsPage extends StatefulWidget {
+  const FavoritesNewsPage({Key? key}) : super(key: key);
 
   @override
-  State<FavoritesPage> createState() => _FavoritesPageState();
+  State<FavoritesNewsPage> createState() => _FavoritesNewsPageState();
 }
 
-class _FavoritesPageState extends State<FavoritesPage> {
+class _FavoritesNewsPageState extends State<FavoritesNewsPage> {
   @override
   void initState() {
     // TODO Review comment.
     // Gets the favorite news from prefs. Because we need to access them from the local memory
     // in order to not be reset after each time we restart the app.
-    Provider.of<FavoritesNewsService>(context, listen: false)
+    Provider.of<FavoritesNewsProvider>(context, listen: false)
       ..setFavoritesNewsIdsToPrefs()
       ..getFavoritesNewsById();
     super.initState();
@@ -37,7 +38,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
           color: Colors.deepPurple,
           child: ListView(
             children: [
-              Consumer<FavoritesNewsService>(
+              Consumer<FavoritesNewsProvider>(
                 builder: (context, favoritesNewsService, child) {
                   return favoritesNewsService.favoriteNewsById == null
                       ? SPINKIT

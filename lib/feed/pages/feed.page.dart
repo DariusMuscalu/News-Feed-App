@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:news_app/feed/models/news.model.dart';
-import 'package:news_app/feed/services/news-pack.service.dart';
+import 'package:news_app/feed/providers/news-pack.provider.dart';
 import 'package:news_app/shared/const/template-dimensions.const.dart';
 import 'package:news_app/shared/widgets/buttons/button.dart';
 import 'package:news_app/shared/widgets/cards/news-card.dart';
@@ -19,12 +19,12 @@ class _FeedPageState extends State<FeedPage> {
   @override
   void initState() {
     // Gets the news pack which holds all the news.
-    Provider.of<NewsPackService>(context, listen: false).getNewsPackM();
+    Provider.of<NewsPackProvider>(context, listen: false).getNewsPackM();
     super.initState();
   }
 
   @override
-  Widget build(BuildContext context) => Consumer<NewsPackService>(
+  Widget build(BuildContext context) => Consumer<NewsPackProvider>(
         builder: (context, newsPackService, children) {
           return PageShell(
             appBarChild: newsPackService.newsPack != null
@@ -65,7 +65,7 @@ class _FeedPageState extends State<FeedPage> {
           Row(
             children: [
               Button(
-                onTap: () => _sortByNumberOfPoints(
+                onTap: () => _sortNewsByNumberOfPoints(
                   descendant: false,
                   allNews: allNews,
                 ),
@@ -74,11 +74,29 @@ class _FeedPageState extends State<FeedPage> {
                 bgrColor: Colors.lightGreen,
               ),
               Button(
-                onTap: () => _sortByNumberOfPoints(
+                onTap: () => _sortNewsByNumberOfPoints(
                   descendant: true,
                   allNews: allNews,
                 ),
                 name: 'Descending',
+                color: Colors.green,
+                bgrColor: Colors.lightGreen,
+              ),
+              Button(
+                onTap: () => _sortNewsByDate(
+                  allNews: allNews,
+                  descendant: false,
+                ),
+                name: 'Oldest date sort',
+                color: Colors.green,
+                bgrColor: Colors.lightGreen,
+              ),
+              Button(
+                onTap: () => _sortNewsByDate(
+                  allNews: allNews,
+                  descendant: true,
+                ),
+                name: 'Latest date sort',
                 color: Colors.green,
                 bgrColor: Colors.lightGreen,
               ),
@@ -107,7 +125,7 @@ class _FeedPageState extends State<FeedPage> {
 
     if (enteredKeyword.isEmpty) {
       // If the search field is empty we'll set the filtered news to all news and exit.
-      Provider.of<NewsPackService>(context, listen: false).updateFilteredNews(
+      Provider.of<NewsPackProvider>(context, listen: false).updateFilteredNews(
         news: allNews,
       );
       return;
@@ -121,25 +139,45 @@ class _FeedPageState extends State<FeedPage> {
     }
 
     // Update the UI
-    Provider.of<NewsPackService>(context, listen: false).updateFilteredNews(
+    Provider.of<NewsPackProvider>(context, listen: false).updateFilteredNews(
       news: news,
     );
   }
 
   // Sort news based on number of points.
   // From lowest to highest or highest to lowest if it's descendant.
-  void _sortByNumberOfPoints({
+  void _sortNewsByNumberOfPoints({
     required List<NewsM> allNews,
     required bool descendant,
   }) {
     List<NewsM> sortedNews = allNews;
     // TODO Add null safety
-    sortedNews.sort((a, b) => (a.numberOfPoints! + b.numberOfPoints!));
-    descendant ? sortedNews.reversed : sortedNews;
+    sortedNews.sort((a, b) => (a.numberOfPoints! - b.numberOfPoints!));
+
+    List<NewsM> sortNewsByHighestNumberOfPoints = sortedNews.reversed.toList();
 
     // Update news.
-    Provider.of<NewsPackService>(context, listen: false).updateFilteredNews(
-      news: sortedNews,
+    Provider.of<NewsPackProvider>(context, listen: false).updateFilteredNews(
+      news: descendant ? sortNewsByHighestNumberOfPoints : sortedNews,
+    );
+  }
+
+  // Sort news by date in ascending or descending order.
+  void _sortNewsByDate({
+    required List<NewsM> allNews,
+    required bool descendant,
+  }) {
+    // TODO Rename
+    List<NewsM> sortedNews = allNews;
+
+    sortedNews.sort(
+        (a, b) => a.publishDate.toString().compareTo(b.publishDate.toString()));
+
+    List<NewsM> sortedByLatestDate = sortedNews.reversed.toList();
+
+    // Update news.
+    Provider.of<NewsPackProvider>(context, listen: false).updateFilteredNews(
+      news: descendant ? sortedByLatestDate : sortedNews,
     );
   }
 }

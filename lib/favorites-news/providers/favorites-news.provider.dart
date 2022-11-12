@@ -1,20 +1,20 @@
 import 'package:flutter/widgets.dart';
-import 'package:news_app/favorites/repositories/favorites-news.repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../feed/models/news.model.dart';
+import '../repositories/favorites-news.repository.dart';
 
 // ignore_for_file: constant_identifier_names
 const FAVORITE_NEWS_KEY = 'FAVORITE_NEWS';
 
 // TODO REFACTOR IT.
-class FavoritesNewsService extends ChangeNotifier {
+class FavoritesNewsProvider extends ChangeNotifier {
   static final _favoritesNewsService =
-      FavoritesNewsService._privateConstructor();
+      FavoritesNewsProvider._privateConstructor();
 
-  factory FavoritesNewsService() => _favoritesNewsService;
+  factory FavoritesNewsProvider() => _favoritesNewsService;
 
-  FavoritesNewsService._privateConstructor();
+  FavoritesNewsProvider._privateConstructor();
 
   // === FAVORITES NEWS ID'S ===
 
