@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:news_app/favorites/services/favorites-news.service.dart';
 import 'package:news_app/feed/services/news-pack.service.dart';
-import 'package:news_app/feed/state/feed.state.dart';
 import 'package:news_app/shared/routing/router.dart';
 import 'package:provider/provider.dart';
 import 'package:url_strategy/url_strategy.dart';
@@ -22,9 +21,6 @@ class App extends StatelessWidget {
         providers: [
           ChangeNotifierProvider(
             create: (context) => NewsPackService(),
-          ),
-          ChangeNotifierProvider(
-            create: (context) => FeedState(),
           ),
           ChangeNotifierProvider(
             create: (context) => FavoritesNewsService(),

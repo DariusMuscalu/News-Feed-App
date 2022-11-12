@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:news_app/favorites/services/favorites-news.service.dart';
 import 'package:news_app/feed/models/news.model.dart';
 import 'package:news_app/feed/services/news-pack.service.dart';
-import 'package:news_app/feed/state/feed.state.dart';
 import 'package:news_app/shared/const/template-dimensions.const.dart';
 import 'package:news_app/shared/widgets/cards/news-card.dart';
 import 'package:news_app/shared/widgets/pages/page-shell.dart';
@@ -17,45 +16,37 @@ class FeedPage extends StatefulWidget {
 }
 
 class _FeedPageState extends State<FeedPage> {
-  final _feedState = FeedState();
-
   @override
   void initState() {
+    // Gets the news pack which holds all the news.
     Provider.of<NewsPackService>(context, listen: false).getNewsPackM();
-    _feedState.setFavoritesNewsToPrefs();
     super.initState();
   }
 
-  // TODO Order method in this file by the order in the build method.
   @override
-  Widget build(BuildContext context) {
-    return Consumer<NewsPackService>(
-      builder: (context, newsPackService, children) {
-        return PageShell(
-          appBarChild: newsPackService.newsPack != null
-              ? _searchBar(
-                  allNews: newsPackService.newsPack!.news,
-                )
-              : SPINKIT,
-          children: <Widget>[
-            _buttonsCol(
-              context,
-            ),
-            newsPackService.filteredNews == null
-                ? SPINKIT
-                : _scrollableList(
-                    children: [
-                      for (final news in newsPackService.filteredNews ?? [])
-                        NewsCard(
-                          news: news,
-                        ),
-                    ],
-                  ),
-          ],
-        );
-      },
-    );
-  }
+  Widget build(BuildContext context) => Consumer<NewsPackService>(
+        builder: (context, newsPackService, children) {
+          return PageShell(
+            appBarChild: newsPackService.newsPack != null
+                ? _searchBar(
+                    allNews: newsPackService.newsPack!.news,
+                  )
+                : SPINKIT,
+            children: <Widget>[
+              newsPackService.filteredNews == null
+                  ? SPINKIT
+                  : _scrollableList(
+                      children: [
+                        for (final news in newsPackService.filteredNews ?? [])
+                          NewsCard(
+                            news: news,
+                          ),
+                      ],
+                    ),
+            ],
+          );
+        },
+      );
 
   Widget _searchBar({required List<NewsM> allNews}) => TextField(
         onChanged: (value) => _runFilter(
@@ -69,6 +60,7 @@ class _FeedPageState extends State<FeedPage> {
       );
 
   // TODO Improve the logic of this method.
+  // TODO Extract this method from here, create an controller.
   void _runFilter({
     required String enteredKeyword,
     required List<NewsM> allNews,
@@ -90,25 +82,9 @@ class _FeedPageState extends State<FeedPage> {
       // We use the toLowerCase() method to make it case-insensitive
     }
 
-    // Refresh the UI
+    // Update the UI
     Provider.of<NewsPackService>(context, listen: false).updateFilteredNews(
       news: news,
-    );
-  }
-
-  Widget _buttonsCol(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        ElevatedButton(
-          onPressed: () => context.go('/favorites'),
-          child: const Text('Go to favorites page'),
-        ),
-        ElevatedButton(
-          onPressed: () => context.go('/calendar'),
-          child: const Text('Go to calendar page'),
-        ),
-      ],
     );
   }
 

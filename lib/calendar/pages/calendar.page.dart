@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:news_app/shared/widgets/pages/page-shell.dart';
 
 // From this page we can filter the news by a specific day
@@ -22,14 +21,6 @@ class CalendarPage extends StatelessWidget {
                 onDateChanged: (_) {},
               ),
             ),
-          ),
-          ElevatedButton(
-            onPressed: () => context.go('/'),
-            child: const Text('Go back to feed page'),
-          ),
-          ElevatedButton(
-            onPressed: () => context.go('/favorites'),
-            child: const Text('Go to favorites page'),
           ),
         ],
       );

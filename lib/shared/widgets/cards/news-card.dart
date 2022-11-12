@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:news_app/favorites/services/favorites-news.service.dart';
 import 'package:news_app/feed/services/feed.utils.dart';
 import 'package:provider/provider.dart';
 
 import '../../../feed/models/news.model.dart';
-import '../../../feed/state/feed.state.dart';
 import '../../images/svg.dart';
 import '../buttons/button.dart';
 
@@ -23,7 +23,6 @@ class NewsCard extends StatefulWidget {
 
 class _NewsCardState extends State<NewsCard> {
   final _feedUtils = FeedUtils();
-  final _feedState = FeedState();
 
   @override
   Widget build(BuildContext context) {
@@ -126,22 +125,30 @@ class _NewsCardState extends State<NewsCard> {
   Widget _publishDate({required String date}) => Text(date);
 
   // TODO See if you should add alias to the bg color bool.
-  Widget _addToFavoritesBtn({required String newsId}) => Button(
-        bgrColor: _feedState.favoriteNewsIds.contains(newsId)
-            ? Colors.redAccent
-            : Colors.green,
-        hoverColor: Colors.grey,
-        hoverBgrColor: Colors.green,
-        name: 'Add to favorites',
-        onTap: () {
-          Provider.of<FeedState>(context, listen: false)
-            ..addNewsToFavorites(
-              newsId: newsId,
-            )
-            ..addFavoritesNewsToPrefs();
-          // Used to trigger the building of the widget in order to change the color
-          // Find a proper way to do it with the provider.
-          setState(() {});
+  // TODO In the favorites page I think it should be by default on one color.
+  Widget _addToFavoritesBtn({required String newsId}) =>
+      Consumer<FavoritesNewsService>(
+        builder: (context, favoriteNewsService, child) {
+          return SizedBox(
+            width: 100,
+            child: Button(
+              iconUrl: 'lib/assets/star-icon.svg',
+              iconWidth: 30,
+              bgrColor: favoriteNewsService.favoriteNewsIds.contains(newsId)
+                  ? Colors.blue
+                  : Colors.redAccent,
+              hoverColor: Colors.grey,
+              hoverBgrColor: Colors.green,
+              // TODO Make it as a parameter, each page should implement it's own method.
+              onTap: () {
+                Provider.of<FavoritesNewsService>(context, listen: false)
+                  ..addNewsToFavorites(
+                    newsId: newsId,
+                  )
+                  ..addFavoritesNewsIdsToPrefs();
+              },
+            ),
+          );
         },
       );
 }
