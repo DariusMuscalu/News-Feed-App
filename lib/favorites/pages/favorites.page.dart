@@ -32,31 +32,28 @@ class _FavoritesPageState extends State<FavoritesPage> {
         ],
       );
 
-  Widget _favoritesNews() => Column(
-        children: [
-          Container(
-            width: 600,
-            height: 400,
-            color: Colors.blue,
-            child: Column(
-              children: [
-                Consumer<FavoritesNewsService>(
-                  builder: (context, favoritesNewsService, child) {
-                    return favoritesNewsService.favoriteNewsById == null
-                        ? SPINKIT
-                        : NewsCard(
-                            news: favoritesNewsService.favoriteNewsById!,
-                          );
-                  },
-                ),
-                Consumer<FavoritesNewsService>(
-                  builder: (context, feedState, child) {
-                    return Text(feedState.favoriteNewsIds.toString());
-                  },
-                ),
-              ],
-            ),
+  Widget _favoritesNews() => Expanded(
+        child: Container(
+          color: Colors.deepPurple,
+          child: ListView(
+            children: [
+              Consumer<FavoritesNewsService>(
+                builder: (context, favoritesNewsService, child) {
+                  return favoritesNewsService.favoriteNewsById == null
+                      ? SPINKIT
+                      : Column(
+                          children: [
+                            for (final news
+                                in favoritesNewsService.favoriteNewsById!)
+                              NewsCard(
+                                news: news,
+                              ),
+                          ],
+                        );
+                },
+              ),
+            ],
           ),
-        ],
+        ),
       );
 }

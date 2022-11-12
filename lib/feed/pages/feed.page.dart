@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:news_app/favorites/services/favorites-news.service.dart';
 import 'package:news_app/feed/models/news.model.dart';
 import 'package:news_app/feed/services/news-pack.service.dart';
 import 'package:news_app/shared/const/template-dimensions.const.dart';
+import 'package:news_app/shared/widgets/buttons/button.dart';
 import 'package:news_app/shared/widgets/cards/news-card.dart';
 import 'package:news_app/shared/widgets/pages/page-shell.dart';
 import 'package:provider/provider.dart';
@@ -48,14 +48,52 @@ class _FeedPageState extends State<FeedPage> {
         },
       );
 
-  Widget _searchBar({required List<NewsM> allNews}) => TextField(
-        onChanged: (value) => _runFilter(
-          enteredKeyword: value,
-          allNews: allNews,
-        ),
-        decoration: const InputDecoration(
-          labelText: 'Search',
-          suffixIcon: Icon(Icons.search),
+  Widget _searchBar({required List<NewsM> allNews}) => Row(
+        children: [
+          Expanded(
+            child: TextField(
+              onChanged: (value) => _runFilter(
+                enteredKeyword: value,
+                allNews: allNews,
+              ),
+              decoration: const InputDecoration(
+                labelText: 'Search',
+                suffixIcon: Icon(Icons.search),
+              ),
+            ),
+          ),
+          Row(
+            children: [
+              Button(
+                onTap: () => _sortByNumberOfPoints(
+                  descendant: false,
+                  allNews: allNews,
+                ),
+                name: 'Ascending',
+                color: Colors.green,
+                bgrColor: Colors.lightGreen,
+              ),
+              Button(
+                onTap: () => _sortByNumberOfPoints(
+                  descendant: true,
+                  allNews: allNews,
+                ),
+                name: 'Descending',
+                color: Colors.green,
+                bgrColor: Colors.lightGreen,
+              ),
+            ],
+          ),
+        ],
+      );
+
+  Widget _scrollableList({required List<Widget> children}) => Expanded(
+        child: Container(
+          color: Colors.blue,
+          child: ListView(
+            controller: ScrollController(),
+            children: children,
+          ),
         ),
       );
 
@@ -88,13 +126,20 @@ class _FeedPageState extends State<FeedPage> {
     );
   }
 
-  Widget _scrollableList({required List<Widget> children}) => Expanded(
-        child: Container(
-          color: Colors.blue,
-          child: ListView(
-            controller: ScrollController(),
-            children: children,
-          ),
-        ),
-      );
+  // Sort news based on number of points.
+  // From lowest to highest or highest to lowest if it's descendant.
+  void _sortByNumberOfPoints({
+    required List<NewsM> allNews,
+    required bool descendant,
+  }) {
+    List<NewsM> sortedNews = allNews;
+    // TODO Add null safety
+    sortedNews.sort((a, b) => (a.numberOfPoints! + b.numberOfPoints!));
+    descendant ? sortedNews.reversed : sortedNews;
+
+    // Update news.
+    Provider.of<NewsPackService>(context, listen: false).updateFilteredNews(
+      news: sortedNews,
+    );
+  }
 }

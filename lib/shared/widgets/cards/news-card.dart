@@ -38,8 +38,6 @@ class _NewsCardState extends State<NewsCard> {
           child: Container(
             padding: const EdgeInsets.all(20),
             margin: const EdgeInsets.all(10),
-            width: 400,
-            height: 200,
             decoration: const BoxDecoration(
               color: Colors.yellow,
               borderRadius: BorderRadius.all(
@@ -126,29 +124,42 @@ class _NewsCardState extends State<NewsCard> {
 
   // TODO See if you should add alias to the bg color bool.
   // TODO In the favorites page I think it should be by default on one color.
-  Widget _addToFavoritesBtn({required String newsId}) =>
-      Consumer<FavoritesNewsService>(
-        builder: (context, favoriteNewsService, child) {
-          return SizedBox(
-            width: 100,
-            child: Button(
-              iconUrl: 'lib/assets/star-icon.svg',
-              iconWidth: 30,
-              bgrColor: favoriteNewsService.favoriteNewsIds.contains(newsId)
-                  ? Colors.blue
-                  : Colors.redAccent,
-              hoverColor: Colors.grey,
-              hoverBgrColor: Colors.green,
-              // TODO Make it as a parameter, each page should implement it's own method.
-              onTap: () {
+  Widget _addToFavoritesBtn({required String newsId}) {
+    bool isFavorite = false;
+
+    return Consumer<FavoritesNewsService>(
+      builder: (context, favoriteNewsService, child) {
+        return SizedBox(
+          width: 100,
+          child: Button(
+            iconUrl: 'lib/assets/star-icon.svg',
+            iconWidth: 20,
+            bgrColor: favoriteNewsService.favoriteNewsIds.contains(newsId)
+                ? Colors.blue
+                : Colors.redAccent,
+            hoverColor: Colors.grey,
+            hoverBgrColor: Colors.green,
+            onTap: () {
+              isFavorite = !isFavorite;
+              if (isFavorite) {
                 Provider.of<FavoritesNewsService>(context, listen: false)
                   ..addNewsToFavorites(
                     newsId: newsId,
                   )
                   ..addFavoritesNewsIdsToPrefs();
-              },
-            ),
-          );
-        },
-      );
+              } else {
+                Provider.of<FavoritesNewsService>(context, listen: false)
+                  ..removeNewsFromFavorites(
+                    newsId: newsId,
+                  )
+                  ..removeFavoriteNewsIdFromPrefs(
+                    newsId: newsId,
+                  );
+              }
+            },
+          ),
+        );
+      },
+    );
+  }
 }

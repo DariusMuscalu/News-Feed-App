@@ -18,20 +18,30 @@ class FavoritesNewsService extends ChangeNotifier {
 
   // === FAVORITES NEWS ID'S ===
 
+  // We start with an empty list, because at the beginning we will not have any news added to fav.
   List<String> _favoriteNewsIds = [];
 
   List<String> get favoriteNewsIds => _favoriteNewsIds;
 
-  void addNewsToFavorites({required String newsId}) => favoriteNewsIds.add(newsId);
+  void addNewsToFavorites({required String newsId}) {
+    _favoriteNewsIds.add(newsId);
 
-  void removeNewsFromFavorites({required String newsId}) => favoriteNewsIds.remove(newsId);
+    notifyListeners();
+  }
+
+  // TODO Add a method that removes from prefs too.
+  void removeNewsFromFavorites({required String newsId}) {
+    _favoriteNewsIds.remove(newsId);
+
+    notifyListeners();
+  }
 
   // === SHARED PREFERENCES ===
 
   Future<void> addFavoritesNewsIdsToPrefs() async {
     final prefs = await SharedPreferences.getInstance();
 
-    prefs.setStringList(FAVORITE_NEWS_KEY, favoriteNewsIds);
+    prefs.setStringList(FAVORITE_NEWS_KEY, _favoriteNewsIds);
     notifyListeners();
   }
 
@@ -42,14 +52,26 @@ class FavoritesNewsService extends ChangeNotifier {
     notifyListeners();
   }
 
-  // TODO Make it private here and in the feed too.
+  Future<void> removeFavoriteNewsIdFromPrefs({required String newsId}) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove(newsId);
+
+    notifyListeners();
+  }
+
   // === FAVORITES NEWS BY ID ===
-  NewsM? favoriteNewsById;
+
+  List<NewsM>? _favoriteNewsById;
+
+  List<NewsM>? get favoriteNewsById => _favoriteNewsById;
 
   void getFavoritesNewsById() async {
-    favoriteNewsById = await FavoritesNewsRepository().getFavoritesNewsById(
-      id: _favoriteNewsIds[0],
-    );
+    _favoriteNewsById = [
+      for (final id in _favoriteNewsIds)
+        await FavoritesNewsRepository().getFavoritesNewsById(
+          id: id,
+        ),
+    ];
 
     notifyListeners();
   }

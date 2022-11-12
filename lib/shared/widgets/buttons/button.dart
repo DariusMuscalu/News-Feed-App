@@ -141,7 +141,8 @@ class _ButtonState extends State<Button> {
             padding:
                 widget.padding ?? const EdgeInsets.fromLTRB(22, 7.5, 22, 7.5),
             child: Row(
-              mainAxisSize: widget.shrink ? MainAxisSize.min : MainAxisSize.max,
+              mainAxisSize:
+                  widget.shrink ? MainAxisSize.min : MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: widget.spaceBetweenElements
                   ? MainAxisAlignment.center
