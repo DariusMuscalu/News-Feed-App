@@ -5,16 +5,10 @@ import '../../feed/models/news.model.dart';
 import '../repositories/favorites-news.repository.dart';
 
 // ignore_for_file: constant_identifier_names
-const FAVORITE_NEWS_KEY = 'FAVORITE_NEWS';
+const FAVORITE_NEWS_IDS_KEY = 'FAVORITE_NEWS_IDS';
 
 // TODO REFACTOR IT.
 class FavoritesNewsProvider extends ChangeNotifier {
-  static final _favoritesNewsService =
-      FavoritesNewsProvider._privateConstructor();
-
-  factory FavoritesNewsProvider() => _favoritesNewsService;
-
-  FavoritesNewsProvider._privateConstructor();
 
   // === FAVORITES NEWS ID'S ===
 
@@ -29,7 +23,6 @@ class FavoritesNewsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // TODO Add a method that removes from prefs too.
   void removeNewsFromFavorites({required String newsId}) {
     _favoriteNewsIds.remove(newsId);
 
@@ -40,21 +33,25 @@ class FavoritesNewsProvider extends ChangeNotifier {
 
   Future<void> addFavoritesNewsIdsToPrefs() async {
     final prefs = await SharedPreferences.getInstance();
+    prefs.setStringList(FAVORITE_NEWS_IDS_KEY, _favoriteNewsIds);
 
-    prefs.setStringList(FAVORITE_NEWS_KEY, _favoriteNewsIds);
     notifyListeners();
   }
 
-  Future<void> setFavoritesNewsIdsToPrefs() async {
+  Future<void> getFavoritesNewsIdsFromPrefs() async {
     final prefs = await SharedPreferences.getInstance();
+    _favoriteNewsIds = prefs.getStringList(FAVORITE_NEWS_IDS_KEY) ?? [];
 
-    _favoriteNewsIds = prefs.getStringList(FAVORITE_NEWS_KEY) ?? [];
     notifyListeners();
   }
 
   Future<void> removeFavoriteNewsIdFromPrefs({required String newsId}) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.remove(newsId);
+
+    final favoriteNewsIds = prefs.getStringList(FAVORITE_NEWS_IDS_KEY);
+    favoriteNewsIds?.remove(newsId);
+
+    prefs.setStringList(FAVORITE_NEWS_IDS_KEY, favoriteNewsIds ?? []);
 
     notifyListeners();
   }
@@ -65,7 +62,7 @@ class FavoritesNewsProvider extends ChangeNotifier {
 
   List<NewsM>? get favoriteNewsById => _favoriteNewsById;
 
-  void getFavoritesNewsById() async {
+  void fetchFavoritesNewsById() async {
     _favoriteNewsById = [
       for (final id in _favoriteNewsIds)
         await FavoritesNewsRepository().getFavoritesNewsById(

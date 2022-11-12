@@ -16,12 +16,11 @@ class FavoritesNewsPage extends StatefulWidget {
 class _FavoritesNewsPageState extends State<FavoritesNewsPage> {
   @override
   void initState() {
-    // TODO Review comment.
-    // Gets the favorite news from prefs. Because we need to access them from the local memory
-    // in order to not be reset after each time we restart the app.
+    // Gets the favorite news ids from prefs. Because we need to access them from the local memory
+    // in order to not reset them after each time we restart the app.
     Provider.of<FavoritesNewsProvider>(context, listen: false)
-      ..setFavoritesNewsIdsToPrefs()
-      ..getFavoritesNewsById();
+      ..getFavoritesNewsIdsFromPrefs()
+      ..fetchFavoritesNewsById();
     super.initState();
   }
 
