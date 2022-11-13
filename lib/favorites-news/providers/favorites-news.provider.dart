@@ -1,14 +1,13 @@
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../feed/models/news.model.dart';
+import '../models/favorite-news.model.dart';
 import '../repositories/favorites-news.repository.dart';
 
 // ignore_for_file: constant_identifier_names
 const FAVORITE_NEWS_IDS_KEY = 'FAVORITE_NEWS_IDS';
 
 class FavoritesNewsProvider extends ChangeNotifier {
-
   // === FAVORITES NEWS ID'S ===
 
   // We start with an empty list, because at the beginning we will not have any news added to fav.
@@ -63,11 +62,15 @@ class FavoritesNewsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateLayout() {
+    notifyListeners();
+  }
+
   // === FAVORITES NEWS BY ID ===
 
-  List<NewsM>? _favoriteNewsById;
+  List<FavoriteNewsM>? _favoriteNewsById;
 
-  List<NewsM>? get favoriteNewsById => _favoriteNewsById;
+  List<FavoriteNewsM>? get favoriteNewsById => _favoriteNewsById;
 
   void fetchFavoritesNewsById() async {
     _favoriteNewsById = [
@@ -76,6 +79,18 @@ class FavoritesNewsProvider extends ChangeNotifier {
           id: id,
         ),
     ];
+
+    notifyListeners();
+  }
+
+  void updateFavoriteNewsById({required String newsId}) {
+    final index = _favoriteNewsById?.indexWhere(
+      (element) => element.newsId.toString() == newsId,
+    );
+
+    if (index != null) {
+      _favoriteNewsById?.removeAt(index);
+    }
 
     notifyListeners();
   }

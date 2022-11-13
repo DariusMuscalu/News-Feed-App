@@ -153,47 +153,42 @@ class _FeedPageState extends State<FeedPage> {
     );
   }
 
-  // TODO This can be made shared in news card only if keep the isFavorite bool in a shared state.
-  Widget _addToFavoritesBtn({required String newsId}) {
-    bool isFavorite = false;
+  Widget _addToFavoritesBtn({required String newsId}) =>
+      Consumer<FavoritesNewsProvider>(
+        builder: (context, favoriteNewsService, child) {
+          return SizedBox(
+            width: 100,
+            child: Button(
+              iconUrl: 'lib/assets/star-icon.svg',
+              iconWidth: 20,
+              bgrColor: favoriteNewsService.favoriteNewsIds.contains(newsId)
+                  ? Colors.blue
+                  : Colors.redAccent,
+              hoverColor: Colors.grey,
+              hoverBgrColor: Colors.green,
+              onTap: () {
+                bool isNotFavorite = !favoriteNewsService.favoriteNewsIds.contains(newsId);
 
-    return Consumer<FavoritesNewsProvider>(
-      builder: (context, favoriteNewsService, child) {
-        print(
-            '+++++++++++++++++++++ ${favoriteNewsService.favoriteNewsIds} ${newsId}');
-        return SizedBox(
-          width: 100,
-          child: Button(
-            iconUrl: 'lib/assets/star-icon.svg',
-            iconWidth: 20,
-            bgrColor: favoriteNewsService.favoriteNewsIds.contains(newsId)
-                ? Colors.blue
-                : Colors.redAccent,
-            hoverColor: Colors.grey,
-            hoverBgrColor: Colors.green,
-            onTap: () {
-              isFavorite = !isFavorite;
-              if (isFavorite) {
-                Provider.of<FavoritesNewsProvider>(context, listen: false)
-                  ..addNewsToFavorites(
-                    newsId: newsId,
-                  )
-                  ..addFavoritesNewsIdsToPrefs();
-              } else {
-                Provider.of<FavoritesNewsProvider>(context, listen: false)
-                  ..removeNewsFromFavorites(
-                    newsId: newsId,
-                  )
-                  ..removeFavoriteNewsIdFromPrefs(
-                    newsId: newsId,
-                  );
-              }
-            },
-          ),
-        );
-      },
-    );
-  }
+                if (isNotFavorite) {
+                  Provider.of<FavoritesNewsProvider>(context, listen: false)
+                    ..addNewsToFavorites(
+                      newsId: newsId,
+                    )
+                    ..addFavoritesNewsIdsToPrefs();
+                } else {
+                  Provider.of<FavoritesNewsProvider>(context, listen: false)
+                    ..removeNewsFromFavorites(
+                      newsId: newsId,
+                    )
+                    ..removeFavoriteNewsIdFromPrefs(
+                      newsId: newsId,
+                    );
+                }
+              },
+            ),
+          );
+        },
+      );
 
   // Sort news based on number of points.
   // From lowest to highest or highest to lowest if it's descendant.
