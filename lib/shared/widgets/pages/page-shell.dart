@@ -40,22 +40,31 @@ class _PageShellState extends State<PageShell> {
     );
   }
 
-  AppBar _appBar({required Widget appBarChild}) => AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.red,
-        title: appBarChild,
+  PreferredSize _appBar({required Widget appBarChild}) => PreferredSize(
+        preferredSize: const Size.fromHeight(60),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: const Color(0xFF2C2B30),
+          title: appBarChild,
+        ),
       );
 
-  Widget _centeredCol({required List<Widget> children}) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: children,
+  Widget _centeredCol({required List<Widget> children}) => Container(
+        color: const Color(0xFF2C2B30),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ...children,
+              _divider(),
+            ],
+          ),
         ),
       );
 
   // TODO CONST LITERALS AND LOOP THROUGH THEM for btns
   Widget _bottomNavigationBar(BuildContext context) => BottomNavigationBar(
-        backgroundColor: Colors.red,
+        backgroundColor: const Color(0xFF2C2B30),
         currentIndex: _currentPageIndex,
         onTap: (pageIndex) {
           switch (pageIndex) {
@@ -84,19 +93,33 @@ class _PageShellState extends State<PageShell> {
             _currentPageIndex = pageIndex;
           });
         },
+        unselectedItemColor: Colors.white70,
+        selectedItemColor: Colors.white,
+        iconSize: 24,
         items: const [
           BottomNavigationBarItem(
-            label: 'Main Feed',
+            tooltip: '',
+            backgroundColor: Colors.white,
+            label: 'Home',
             icon: Icon(Icons.home),
           ),
           BottomNavigationBarItem(
+            tooltip: '',
+            backgroundColor: Colors.white,
             label: 'Favorites',
             icon: Icon(Icons.star),
           ),
           BottomNavigationBarItem(
+            tooltip: '',
             label: 'Calendar',
             icon: Icon(Icons.calendar_today),
           ),
         ],
+      );
+
+  Widget _divider() => const Divider(
+        height: 2,
+        thickness: 0.7,
+        color: Colors.grey,
       );
 }

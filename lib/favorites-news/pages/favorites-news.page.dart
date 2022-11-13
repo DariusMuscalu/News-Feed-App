@@ -26,7 +26,7 @@ class _FavoritesNewsPageState extends State<FavoritesNewsPage> {
 
   @override
   Widget build(BuildContext context) => PageShell(
-        appBarChild: const Text('Favorites Page'),
+        appBarChild: const Text('Favorites News'),
         children: <Widget>[
           _favoritesNews(),
         ],
@@ -34,7 +34,7 @@ class _FavoritesNewsPageState extends State<FavoritesNewsPage> {
 
   Widget _favoritesNews() => Expanded(
         child: Container(
-          color: Colors.deepPurple,
+          color: const Color(0xFF2C2B30),
           child: ListView(
             children: [
               Consumer<FavoritesNewsProvider>(

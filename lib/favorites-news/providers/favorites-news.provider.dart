@@ -52,10 +52,7 @@ class FavoritesNewsProvider extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
 
     final favoriteNewsIds = prefs.getStringList(FAVORITE_NEWS_IDS_KEY);
-    // TODO Debug in here in order to understand that removing / adding bug.
-    print(favoriteNewsIds);
     favoriteNewsIds?.remove(newsId);
-    print(favoriteNewsIds);
 
     prefs.setStringList(FAVORITE_NEWS_IDS_KEY, favoriteNewsIds ?? []);
 

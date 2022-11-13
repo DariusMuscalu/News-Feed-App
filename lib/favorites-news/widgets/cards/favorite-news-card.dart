@@ -94,7 +94,7 @@ class _FavoriteNewsCardState extends State<FavoriteNewsCard> {
               color: Colors.brown,
             ),
           ),
-          const Svg(
+          Svg(
             iconUrl: 'lib/assets/comments/comments-icon.svg',
           ),
         ],
@@ -105,8 +105,6 @@ class _FavoriteNewsCardState extends State<FavoriteNewsCard> {
   Widget _addToFavoritesBtn({required int newsId}) {
     return Consumer<FavoritesNewsProvider>(
       builder: (context, favoriteNewsService, child) {
-        print(
-            '+++++++++++++++++++++ ${favoriteNewsService.favoriteNewsIds} ${newsId}');
         return SizedBox(
           width: 100,
           child: Button(

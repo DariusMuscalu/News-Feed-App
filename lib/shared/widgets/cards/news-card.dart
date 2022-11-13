@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../../../favorites-news/providers/favorites-news.provider.dart';
 import '../../../feed/models/news.model.dart';
 import '../../images/svg.dart';
 import '../../utils/feed.utils.dart';
-import '../buttons/button.dart';
 
 // The card that is responsible for displaying all the data of each news.
 // ignore_for_file: file_names
@@ -39,9 +36,21 @@ class _NewsCardState extends State<NewsCard> {
         child: InkWell(
           child: Container(
             padding: const EdgeInsets.all(20),
-            margin: const EdgeInsets.all(10),
+            margin: const EdgeInsets.symmetric(
+              vertical: 7,
+              horizontal: 14,
+            ),
             decoration: const BoxDecoration(
               color: Colors.yellow,
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                tileMode: TileMode.repeated,
+                colors: [
+                  Color(0xFF4A3B35),
+                  Color(0xFF383836),
+                ],
+              ),
               borderRadius: BorderRadius.all(
                 Radius.circular(25),
               ),
@@ -52,19 +61,35 @@ class _NewsCardState extends State<NewsCard> {
                 _title(
                   title: news?.title ?? '',
                 ),
-                _author(
-                  author: news?.author ?? '',
+                Row(
+                  children: [
+                    _author(
+                      author: news?.author ?? '',
+                    ),
+                    _publishDate(
+                      date: news?.publishDate ?? '',
+                    ),
+                  ],
                 ),
-                _numberOfComments(
-                  commentsNum: news?.numberOfComments ?? 0,
+                Container(
+                  padding: const EdgeInsets.only(top: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          _numberOfPoints(
+                            points: news?.numberOfPoints ?? 0,
+                          ),
+                          _numberOfComments(
+                            commentsNum: news?.numberOfComments ?? 0,
+                          ),
+                        ],
+                      ),
+                      widget.button,
+                    ],
+                  ),
                 ),
-                _numberOfPoints(
-                  points: news?.numberOfPoints ?? 0,
-                ),
-                _publishDate(
-                  date: news?.publishDate ?? '',
-                ),
-                widget.button,
               ],
             ),
           ),
@@ -74,33 +99,41 @@ class _NewsCardState extends State<NewsCard> {
         ),
       );
 
-  Widget _title({required String title}) => Text(
-        title,
-        style: const TextStyle(
-          fontWeight: FontWeight.w700,
+  Widget _title({required String title}) => Container(
+        padding: const EdgeInsets.only(bottom: 10),
+        child: Text(
+          title,
+          style: const TextStyle(
+            color: Color(0xFFcccccc),
+            fontWeight: FontWeight.w700,
+          ),
         ),
       );
 
   Widget _author({required String author}) => Text(
-        author,
+        'By $author at ',
         style: const TextStyle(
+          color: Colors.white70,
           fontWeight: FontWeight.w500,
         ),
       );
 
-  // TODO Add modify name of the method and break it into multiple ones??
+  // TODO Modify name of the method and break it into multiple ones??
   Widget _numberOfComments({required int commentsNum}) => Row(
         children: [
           Text(
             '$commentsNum',
             style: const TextStyle(
-              color: Colors.brown,
+              color: Color(0xFF9b9b9b),
             ),
           ),
-          const Svg(
-            height: 30,
-            color: Colors.black,
-            iconUrl: 'lib/assets/comments/comments-icon.svg',
+          Container(
+            padding: const EdgeInsets.only(left: 5),
+            child: Svg(
+              height: 30,
+              color: const Color(0xFF9b9b9b),
+              iconUrl: 'lib/assets/comments/comments-icon.svg',
+            ),
           ),
         ],
       );
@@ -111,14 +144,22 @@ class _NewsCardState extends State<NewsCard> {
           Text(
             '$points',
             style: const TextStyle(
-              color: Colors.brown,
+              color: Color(0xFF9b9b9b),
             ),
           ),
-          const Svg(
-            iconUrl: 'lib/assets/comments/comments-icon.svg',
+          Svg(
+            height: 40,
+            color: const Color(0xFF9b9b9b),
+            iconUrl: 'lib/assets/cards/arrow-icon.svg',
           ),
         ],
       );
 
-  Widget _publishDate({required String date}) => Text(date);
+  // TODO Write the logic if it's the same date as today, to only show the hour.
+  Widget _publishDate({required String date}) => Text(
+        DateTime.parse(date).toString(),
+        style: const TextStyle(
+          color: Color(0xFF9b9b9b),
+        ),
+      );
 }

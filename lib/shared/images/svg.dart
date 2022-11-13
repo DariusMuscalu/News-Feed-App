@@ -8,10 +8,10 @@ class Svg extends StatelessWidget {
   final String iconUrl;
   final double? width;
   final double? height;
-  final Color? color;
   final String? semanticLabel;
+  Color? color;
 
-  const Svg({
+  Svg({
     required this.iconUrl,
     this.width,
     this.height,

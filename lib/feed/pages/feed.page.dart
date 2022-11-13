@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:news_app/feed/models/news.model.dart';
 import 'package:news_app/feed/providers/news-pack.provider.dart';
 import 'package:news_app/shared/const/template-dimensions.const.dart';
+import 'package:news_app/shared/images/svg.dart';
 import 'package:news_app/shared/widgets/buttons/button.dart';
 import 'package:news_app/shared/widgets/cards/news-card.dart';
 import 'package:news_app/shared/widgets/pages/page-shell.dart';
@@ -36,8 +37,13 @@ class _FeedPageState extends State<FeedPage> {
                 ? _searchBar(
                     allNews: newsPackService.newsPack!.news,
                   )
-                : SPINKIT,
+                : const SizedBox(),
             children: <Widget>[
+              newsPackService.newsPack != null
+                  ? _dropdownButtons(
+                      newsPackService.newsPack!.news,
+                    )
+                  : const SizedBox(),
               newsPackService.filteredNews == null
                   ? SPINKIT
                   : _scrollableList(
@@ -57,66 +63,100 @@ class _FeedPageState extends State<FeedPage> {
         },
       );
 
-  Widget _searchBar({required List<NewsM> allNews}) => Row(
-        children: [
-          Expanded(
-            child: TextField(
-              onChanged: (value) => _runFilter(
-                enteredKeyword: value,
-                allNews: allNews,
+  Widget _searchBar({required List<NewsM> allNews}) => Expanded(
+        child: Container(
+          margin: const EdgeInsets.only(top: 10),
+          height: 45,
+          child: TextField(
+            cursorColor: Colors.white,
+            onChanged: (value) => _runFilter(
+              enteredKeyword: value,
+              allNews: allNews,
+            ),
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+            ),
+            decoration: const InputDecoration(
+              labelText: 'Search',
+              labelStyle: TextStyle(
+                color: Colors.white,
               ),
-              decoration: const InputDecoration(
-                labelText: 'Search',
-                suffixIcon: Icon(Icons.search),
+              suffixIcon: Icon(Icons.search),
+              suffixIconColor: Colors.redAccent,
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BORDER_RADIUS,
+                borderSide: BorderSide(
+                  color: Colors.white,
+                ),
+              ),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.white70,
+                ),
+                borderRadius: BORDER_RADIUS,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.white70,
+                ),
+                borderRadius: BORDER_RADIUS,
               ),
             ),
           ),
-          Row(
-            children: [
-              Button(
-                onTap: () => _sortNewsByNumberOfPoints(
-                  descendant: false,
-                  allNews: allNews,
-                ),
-                name: 'Ascending',
-                color: Colors.green,
-                bgrColor: Colors.lightGreen,
-              ),
-              Button(
-                onTap: () => _sortNewsByNumberOfPoints(
-                  descendant: true,
-                  allNews: allNews,
-                ),
-                name: 'Descending',
-                color: Colors.green,
-                bgrColor: Colors.lightGreen,
-              ),
-              Button(
-                onTap: () => _sortNewsByDate(
-                  allNews: allNews,
-                  descendant: false,
-                ),
-                name: 'Oldest date sort',
-                color: Colors.green,
-                bgrColor: Colors.lightGreen,
-              ),
-              Button(
-                onTap: () => _sortNewsByDate(
-                  allNews: allNews,
-                  descendant: true,
-                ),
-                name: 'Latest date sort',
-                color: Colors.green,
-                bgrColor: Colors.lightGreen,
-              ),
-            ],
+        ),
+      );
+
+  Widget _dropdownButtons(List<NewsM> allNews) => Wrap(
+        children: [
+          _dropdownButton(
+            name: 'Lowest Number Of Points',
+            onTap: () => _sortNewsByNumberOfPoints(
+              descendant: false,
+              allNews: allNews,
+            ),
+          ),
+          _dropdownButton(
+            name: 'Highest Number Of Points',
+            onTap: () => _sortNewsByNumberOfPoints(
+              descendant: true,
+              allNews: allNews,
+            ),
+          ),
+          _dropdownButton(
+            name: 'Oldest Date Sort',
+            onTap: () => _sortNewsByDate(
+              allNews: allNews,
+              descendant: false,
+            ),
+          ),
+          _dropdownButton(
+            name: 'Latest Date Sort',
+            onTap: () => _sortNewsByDate(
+              allNews: allNews,
+              descendant: true,
+            ),
           ),
         ],
       );
 
+  Widget _dropdownButton({
+    required String name,
+    required Function() onTap,
+  }) =>
+      Button(
+        name: name,
+        shrink: true,
+        color: Colors.black,
+        margin: const EdgeInsets.all(4.5),
+        bgrColor: const Color(0xFF9b9b9b),
+        borderColor: Colors.white70,
+        onTap: onTap,
+      );
+
   Widget _scrollableList({required List<Widget> children}) => Expanded(
         child: Container(
-          color: Colors.blue,
+          color: const Color(0xFF2C2B30),
           child: ListView(
             controller: ScrollController(),
             children: children,
@@ -156,36 +196,36 @@ class _FeedPageState extends State<FeedPage> {
   Widget _addToFavoritesBtn({required String newsId}) =>
       Consumer<FavoritesNewsProvider>(
         builder: (context, favoriteNewsService, child) {
-          return SizedBox(
-            width: 100,
-            child: Button(
+          // TODO Add on hover color
+          return InkWell(
+            // TODO Add tappable container area in order to easily press on mobile.
+            child: Svg(
+              height: 42,
+              color: favoriteNewsService.favoriteNewsIds.contains(newsId)
+                  ? const Color(0xFFe6a338)
+                  : const Color(0xFF9b9b9b),
               iconUrl: 'lib/assets/star-icon.svg',
-              iconWidth: 20,
-              bgrColor: favoriteNewsService.favoriteNewsIds.contains(newsId)
-                  ? Colors.blue
-                  : Colors.redAccent,
-              hoverColor: Colors.grey,
-              hoverBgrColor: Colors.green,
-              onTap: () {
-                bool isNotFavorite = !favoriteNewsService.favoriteNewsIds.contains(newsId);
-
-                if (isNotFavorite) {
-                  Provider.of<FavoritesNewsProvider>(context, listen: false)
-                    ..addNewsToFavorites(
-                      newsId: newsId,
-                    )
-                    ..addFavoritesNewsIdsToPrefs();
-                } else {
-                  Provider.of<FavoritesNewsProvider>(context, listen: false)
-                    ..removeNewsFromFavorites(
-                      newsId: newsId,
-                    )
-                    ..removeFavoriteNewsIdFromPrefs(
-                      newsId: newsId,
-                    );
-                }
-              },
             ),
+            onTap: () {
+              bool isNotFavorite =
+                  !favoriteNewsService.favoriteNewsIds.contains(newsId);
+
+              if (isNotFavorite) {
+                Provider.of<FavoritesNewsProvider>(context, listen: false)
+                  ..addNewsToFavorites(
+                    newsId: newsId,
+                  )
+                  ..addFavoritesNewsIdsToPrefs();
+              } else {
+                Provider.of<FavoritesNewsProvider>(context, listen: false)
+                  ..removeNewsFromFavorites(
+                    newsId: newsId,
+                  )
+                  ..removeFavoriteNewsIdFromPrefs(
+                    newsId: newsId,
+                  );
+              }
+            },
           );
         },
       );

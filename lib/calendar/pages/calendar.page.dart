@@ -8,12 +8,12 @@ class CalendarPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => PageShell(
-        appBarChild: const Text('Calendar Page'),
+        appBarChild: const Text('Calendar Page - WILL BE ADDED SOON'),
         children: <Widget>[
           Center(
             child: Container(
               width: 500,
-              color: Colors.amber,
+              color: Colors.white,
               child: CalendarDatePicker(
                 initialDate: DateTime.now(),
                 firstDate: DateTime(1900),
