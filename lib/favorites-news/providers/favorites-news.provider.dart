@@ -7,7 +7,6 @@ import '../repositories/favorites-news.repository.dart';
 // ignore_for_file: constant_identifier_names
 const FAVORITE_NEWS_IDS_KEY = 'FAVORITE_NEWS_IDS';
 
-// TODO REFACTOR IT.
 class FavoritesNewsProvider extends ChangeNotifier {
 
   // === FAVORITES NEWS ID'S ===
@@ -18,6 +17,11 @@ class FavoritesNewsProvider extends ChangeNotifier {
   List<String> get favoriteNewsIds => _favoriteNewsIds;
 
   void addNewsToFavorites({required String newsId}) {
+    // Don't add if it's already added.
+    if (_favoriteNewsIds.contains(newsId)) {
+      return;
+    }
+
     _favoriteNewsIds.add(newsId);
 
     notifyListeners();
@@ -49,7 +53,10 @@ class FavoritesNewsProvider extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
 
     final favoriteNewsIds = prefs.getStringList(FAVORITE_NEWS_IDS_KEY);
+    // TODO Debug in here in order to understand that removing / adding bug.
+    print(favoriteNewsIds);
     favoriteNewsIds?.remove(newsId);
+    print(favoriteNewsIds);
 
     prefs.setStringList(FAVORITE_NEWS_IDS_KEY, favoriteNewsIds ?? []);
 

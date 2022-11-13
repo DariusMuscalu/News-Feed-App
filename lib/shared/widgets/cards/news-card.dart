@@ -11,9 +11,11 @@ import '../buttons/button.dart';
 // ignore_for_file: file_names
 class NewsCard extends StatefulWidget {
   final NewsM news;
+  final Widget button;
 
   const NewsCard({
     required this.news,
+    required this.button,
     Key? key,
   }) : super(key: key);
 
@@ -62,9 +64,7 @@ class _NewsCardState extends State<NewsCard> {
                 _publishDate(
                   date: news?.publishDate ?? '',
                 ),
-                _addToFavoritesBtn(
-                  newsId: news?.newsId ?? '',
-                ),
+                widget.button,
               ],
             ),
           ),
@@ -121,45 +121,4 @@ class _NewsCardState extends State<NewsCard> {
       );
 
   Widget _publishDate({required String date}) => Text(date);
-
-  // TODO See if you should add alias to the bg color bool.
-  // TODO In the favorites page I think it should be by default on one color.
-  Widget _addToFavoritesBtn({required String newsId}) {
-    bool isFavorite = false;
-
-    return Consumer<FavoritesNewsProvider>(
-      builder: (context, favoriteNewsService, child) {
-        return SizedBox(
-          width: 100,
-          child: Button(
-            iconUrl: 'lib/assets/star-icon.svg',
-            iconWidth: 20,
-            bgrColor: favoriteNewsService.favoriteNewsIds.contains(newsId)
-                ? Colors.blue
-                : Colors.redAccent,
-            hoverColor: Colors.grey,
-            hoverBgrColor: Colors.green,
-            onTap: () {
-              isFavorite = !isFavorite;
-              if (isFavorite) {
-                Provider.of<FavoritesNewsProvider>(context, listen: false)
-                  ..addNewsToFavorites(
-                    newsId: newsId,
-                  )
-                  ..addFavoritesNewsIdsToPrefs();
-              } else {
-                Provider.of<FavoritesNewsProvider>(context, listen: false)
-                  ..removeNewsFromFavorites(
-                    newsId: newsId,
-                  )
-                  ..removeFavoriteNewsIdFromPrefs(
-                    newsId: newsId,
-                  );
-              }
-            },
-          ),
-        );
-      },
-    );
-  }
 }

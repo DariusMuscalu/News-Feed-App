@@ -47,6 +47,7 @@ class _FavoritesNewsPageState extends State<FavoritesNewsPage> {
                                 in favoritesNewsService.favoriteNewsById!)
                               NewsCard(
                                 news: news,
+                                button: SizedBox(),
                               ),
                           ],
                         );

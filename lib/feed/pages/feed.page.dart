@@ -7,6 +7,8 @@ import 'package:news_app/shared/widgets/cards/news-card.dart';
 import 'package:news_app/shared/widgets/pages/page-shell.dart';
 import 'package:provider/provider.dart';
 
+import '../../favorites-news/providers/favorites-news.provider.dart';
+
 // This is the main feed that is showing the latest news.
 class FeedPage extends StatefulWidget {
   const FeedPage({Key? key}) : super(key: key);
@@ -20,6 +22,9 @@ class _FeedPageState extends State<FeedPage> {
   void initState() {
     // Gets the news pack which holds all the news.
     Provider.of<NewsPackProvider>(context, listen: false).getNewsPackM();
+    // Gets the favorites, if any, from the prefs.
+    Provider.of<FavoritesNewsProvider>(context, listen: false)
+        .getFavoritesNewsIdsFromPrefs();
     super.initState();
   }
 
@@ -37,9 +42,13 @@ class _FeedPageState extends State<FeedPage> {
                   ? SPINKIT
                   : _scrollableList(
                       children: [
-                        for (final news in newsPackService.filteredNews ?? [])
+                        for (final news
+                            in newsPackService.filteredNews ?? <NewsM>[])
                           NewsCard(
                             news: news,
+                            button: _addToFavoritesBtn(
+                              newsId: news.newsId ?? '',
+                            ),
                           ),
                       ],
                     ),
@@ -141,6 +150,48 @@ class _FeedPageState extends State<FeedPage> {
     // Update the UI
     Provider.of<NewsPackProvider>(context, listen: false).updateFilteredNews(
       news: news,
+    );
+  }
+
+  // TODO This can be made shared in news card only if keep the isFavorite bool in a shared state.
+  Widget _addToFavoritesBtn({required String newsId}) {
+    bool isFavorite = false;
+
+    return Consumer<FavoritesNewsProvider>(
+      builder: (context, favoriteNewsService, child) {
+        print(
+            '+++++++++++++++++++++ ${favoriteNewsService.favoriteNewsIds} ${newsId}');
+        return SizedBox(
+          width: 100,
+          child: Button(
+            iconUrl: 'lib/assets/star-icon.svg',
+            iconWidth: 20,
+            bgrColor: favoriteNewsService.favoriteNewsIds.contains(newsId)
+                ? Colors.blue
+                : Colors.redAccent,
+            hoverColor: Colors.grey,
+            hoverBgrColor: Colors.green,
+            onTap: () {
+              isFavorite = !isFavorite;
+              if (isFavorite) {
+                Provider.of<FavoritesNewsProvider>(context, listen: false)
+                  ..addNewsToFavorites(
+                    newsId: newsId,
+                  )
+                  ..addFavoritesNewsIdsToPrefs();
+              } else {
+                Provider.of<FavoritesNewsProvider>(context, listen: false)
+                  ..removeNewsFromFavorites(
+                    newsId: newsId,
+                  )
+                  ..removeFavoriteNewsIdFromPrefs(
+                    newsId: newsId,
+                  );
+              }
+            },
+          ),
+        );
+      },
     );
   }
 
