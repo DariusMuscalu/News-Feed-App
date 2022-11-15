@@ -53,7 +53,7 @@ class _PageShellState extends State<PageShell> {
         color: const Color(0xFF2C2B30),
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               ...children,
               _divider(),
@@ -96,6 +96,7 @@ class _PageShellState extends State<PageShell> {
         unselectedItemColor: Colors.white70,
         selectedItemColor: Colors.white,
         iconSize: 24,
+        // TODO Make a model and a const file in order to loop through all hardcoded items.
         items: const [
           BottomNavigationBarItem(
             tooltip: '',

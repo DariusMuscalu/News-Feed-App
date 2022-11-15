@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:news_app/feed/models/news.model.dart';
 import 'package:news_app/feed/providers/news-pack.provider.dart';
 import 'package:news_app/shared/const/template-dimensions.const.dart';
-import 'package:news_app/shared/images/svg.dart';
 import 'package:news_app/shared/widgets/buttons/button.dart';
 import 'package:news_app/shared/widgets/cards/news-card.dart';
 import 'package:news_app/shared/widgets/pages/page-shell.dart';
@@ -52,9 +51,6 @@ class _FeedPageState extends State<FeedPage> {
                             in newsPackService.filteredNews ?? <NewsM>[])
                           NewsCard(
                             news: news,
-                            button: _addToFavoritesBtn(
-                              newsId: news.newsId ?? '',
-                            ),
                           ),
                       ],
                     ),
@@ -107,6 +103,7 @@ class _FeedPageState extends State<FeedPage> {
         ),
       );
 
+  // TODO Ain't dropdown, modify name.
   Widget _dropdownButtons(List<NewsM> allNews) => Wrap(
         children: [
           _dropdownButton(
@@ -192,43 +189,6 @@ class _FeedPageState extends State<FeedPage> {
       news: news,
     );
   }
-
-  Widget _addToFavoritesBtn({required String newsId}) =>
-      Consumer<FavoritesNewsProvider>(
-        builder: (context, favoriteNewsService, child) {
-          // TODO Add on hover color
-          return InkWell(
-            // TODO Add tappable container area in order to easily press on mobile.
-            child: Svg(
-              height: 42,
-              color: favoriteNewsService.favoriteNewsIds.contains(newsId)
-                  ? const Color(0xFFe6a338)
-                  : const Color(0xFF9b9b9b),
-              iconUrl: 'lib/assets/star-icon.svg',
-            ),
-            onTap: () {
-              bool isNotFavorite =
-                  !favoriteNewsService.favoriteNewsIds.contains(newsId);
-
-              if (isNotFavorite) {
-                Provider.of<FavoritesNewsProvider>(context, listen: false)
-                  ..addNewsToFavorites(
-                    newsId: newsId,
-                  )
-                  ..addFavoritesNewsIdsToPrefs();
-              } else {
-                Provider.of<FavoritesNewsProvider>(context, listen: false)
-                  ..removeNewsFromFavorites(
-                    newsId: newsId,
-                  )
-                  ..removeFavoriteNewsIdFromPrefs(
-                    newsId: newsId,
-                  );
-              }
-            },
-          );
-        },
-      );
 
   // Sort news based on number of points.
   // From lowest to highest or highest to lowest if it's descendant.
