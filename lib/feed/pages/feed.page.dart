@@ -171,7 +171,7 @@ class _FeedPageState extends State<FeedPage> {
 
     if (enteredKeyword.isEmpty) {
       // If the search field is empty we'll set the filtered news to all news and exit.
-      Provider.of<NewsPackProvider>(context, listen: false).updateFilteredNews(
+      Provider.of<NewsPackProvider>(context, listen: false).updateFilteredNewsByOrderOfLatestOrHighestDate(
         news: allNews,
       );
       return;
@@ -184,8 +184,9 @@ class _FeedPageState extends State<FeedPage> {
       // We use the toLowerCase() method to make it case-insensitive
     }
 
+    // TODO See if comment makes sense.
     // Update the UI
-    Provider.of<NewsPackProvider>(context, listen: false).updateFilteredNews(
+    Provider.of<NewsPackProvider>(context, listen: false).updateFilteredNewsByOrderOfLatestOrHighestDate(
       news: news,
     );
   }
@@ -203,7 +204,7 @@ class _FeedPageState extends State<FeedPage> {
     List<NewsM> sortNewsByHighestNumberOfPoints = sortedNews.reversed.toList();
 
     // Update news.
-    Provider.of<NewsPackProvider>(context, listen: false).updateFilteredNews(
+    Provider.of<NewsPackProvider>(context, listen: false).updateFilteredNewsByOrderOfLatestOrHighestDate(
       news: descendant ? sortNewsByHighestNumberOfPoints : sortedNews,
     );
   }
@@ -222,7 +223,7 @@ class _FeedPageState extends State<FeedPage> {
     List<NewsM> sortedByLatestDate = sortedNews.reversed.toList();
 
     // Update news.
-    Provider.of<NewsPackProvider>(context, listen: false).updateFilteredNews(
+    Provider.of<NewsPackProvider>(context, listen: false).updateFilteredNewsByOrderOfLatestOrHighestDate(
       news: descendant ? sortedByLatestDate : sortedNews,
     );
   }

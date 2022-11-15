@@ -12,6 +12,7 @@ class NewsPackProvider extends ChangeNotifier {
     newsPack = await NewsPackRepository().fetchNewsM();
     // TODO Leave comment why it's used how it's used.
     filteredNews = newsPack?.news;
+    filteredNewsBySelectedDate = newsPack?.news;
 
     notifyListeners();
   }
@@ -19,8 +20,18 @@ class NewsPackProvider extends ChangeNotifier {
   // === FILTERED NEWS ===
   List<NewsM>? filteredNews;
 
-  void updateFilteredNews({required List<NewsM> news}) {
+  // TODO Simplify method name
+  void updateFilteredNewsByOrderOfLatestOrHighestDate({required List<NewsM> news}) {
     filteredNews = news;
+
+    notifyListeners();
+  }
+
+  // === FILTERED NEWS BY SELECTED DATE ===
+  List<NewsM>? filteredNewsBySelectedDate;
+
+  void updateFilteredNewsBySelectedDate({required List<NewsM> news}) {
+    filteredNewsBySelectedDate = news;
 
     notifyListeners();
   }
