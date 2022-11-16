@@ -176,6 +176,7 @@ class _NewsCardState extends State<NewsCard> {
         iconUrl: 'lib/assets/cards/arrow-icon.svg',
       );
 
+  // TODO Make it only show the year/month/day/hour/minute.
   // TODO Write the logic if it's the same date as today, to only show the hour.
   Widget _publishDate({required String date}) => Text(
         DateTime.parse(date).toString(),

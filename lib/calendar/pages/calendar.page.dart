@@ -5,6 +5,7 @@ import 'package:news_app/shared/widgets/pages/page-shell.dart';
 import 'package:provider/provider.dart';
 
 import '../../feed/models/news.model.dart';
+import '../../shared/widgets/buttons/button.dart';
 
 // From this page we can filter the news by a specific day
 // and show news only from that day.
@@ -16,39 +17,62 @@ class CalendarPage extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<CalendarPage> {
+  bool _showCalendar = false;
+
   @override
   Widget build(BuildContext context) => PageShell(
-        appBarChild: const Text('Calendar Page - WILL BE ADDED SOON'),
+        appBarChild: _appBarRow(),
         children: <Widget>[
           _calendar(),
           _newsBySelectedDate(),
         ],
       );
 
-  Widget _calendar() => Consumer<NewsPackProvider>(
-        builder: (context, newsPackProvider, children) {
-          return Center(
-            child: Container(
-              width: 500,
-              height: 200,
-              color: Colors.white,
-              child: CalendarDatePicker(
-                initialDate: DateTime.now(),
-                firstDate: DateTime(1900),
-                lastDate: DateTime(2100),
-                onDateChanged: (selectedDate) {
-                  if (newsPackProvider.newsPack?.news != null) {
-                    _runFilter(
-                      allNews: newsPackProvider.newsPack!.news,
-                      selectedDate: selectedDate,
-                    );
-                  }
-                },
-              ),
-            ),
-          );
+  Widget _appBarRow() => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text('Calendar Page'),
+          _openCalendarBtn(),
+        ],
+      );
+
+  Widget _openCalendarBtn() => Button(
+        bgrColor: Colors.white70,
+        color: const Color(0xFF2C2B30),
+        name: 'Select Date',
+        onTap: () {
+          _showCalendar = !_showCalendar;
+          // Update the UI, TODO move it to state.
+          setState(() {});
         },
       );
+
+  Widget _calendar() => _showCalendar
+      ? Consumer<NewsPackProvider>(
+          builder: (context, newsPackProvider, children) {
+            return Center(
+              child: Container(
+                width: 500,
+                height: 200,
+                color: const Color(0xFF2C2B30),
+                child: CalendarDatePicker(
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime(2100),
+                  onDateChanged: (selectedDate) {
+                    if (newsPackProvider.newsPack?.news != null) {
+                      _runFilter(
+                        allNews: newsPackProvider.newsPack!.news,
+                        selectedDate: selectedDate,
+                      );
+                    }
+                  },
+                ),
+              ),
+            );
+          },
+        )
+      : const SizedBox();
 
   Widget _newsBySelectedDate() => Consumer<NewsPackProvider>(
         builder: (context, newsPackProvider, children) {
